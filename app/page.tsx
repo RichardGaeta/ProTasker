@@ -39,6 +39,16 @@ export default function Home() {
     }));
   }
 
+  function handleKeyDown(event: { key: string; }) {
+    if (event.key === "Enter") {
+      addTask(text)
+    }
+  }
+
+  function editTask() {
+    
+  }
+
   return (
     <div className="h-screen flex flex-row">
       <div id="SideBar" className="w-32 h-full bg-neutral-900 flex flex-col justify-between *:px-4 *:py-4">
@@ -55,14 +65,16 @@ export default function Home() {
         <div className="h-full w-1/2 bg-neutral-800 border-r-2 border-black">
           <div className="h-full w-full px-3 py-3">
             <input className="w-full rounded-md px-2 py-2 bg-black" 
+              placeholder="Add Task..."
               value={text} 
               onChange={e => setText(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
-            <button onClick={() => addTask(text)}>Add Task</button>
             {tasks.map(task => (
             <TodoItem
             key={task.id} 
             task={task}
+            editTask={editTask}
             deleteTask={deleteTask}
             toggleCompleted={toggleCompleted} 
             />
