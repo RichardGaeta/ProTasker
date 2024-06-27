@@ -45,9 +45,12 @@ export default function Home() {
     }
   }
 
-  function editTask() {
-    
-  }
+  const handleUpdate = (id: number, newText: string) => {
+    const updatedTodos = tasks.map(task => 
+      task.id === id ? { ...task, text: newText } : task
+    );
+    setTasks(updatedTodos);
+  };
 
   return (
     <div className="h-screen flex flex-row">
@@ -74,9 +77,9 @@ export default function Home() {
             <TodoItem
             key={task.id} 
             task={task}
-            editTask={editTask}
             deleteTask={deleteTask}
-            toggleCompleted={toggleCompleted} 
+            toggleCompleted={toggleCompleted}
+            handleUpdate={handleUpdate}
             />
             ))}
           </div>
