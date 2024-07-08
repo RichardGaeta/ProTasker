@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import TodoItem from "./TodoItem";
 import ContextMenu from "./ContextMenu";
+import ItemDesc from "./ItemInfo";
 
 export default function Home() {
   interface Task {
@@ -10,18 +11,21 @@ export default function Home() {
     text: String;
     completed: Boolean;
     taskPriority: Number;
+    date: Date | null;
     taskDesc: String;
     subTasks: Number[];
   }
   const [tasks, setTasks] = useState<Task[]>([])
 
   const [text, setText] = useState('');
+  const [taskSelected, setTaskSelected] = useState<Task>();
   function addTask(text: string) {
     const newTask = {
       id: Date.now(),
       text,
       completed: false,
       taskPriority: 4,
+      date: null,
       taskDesc: '',
       subTasks: [],
     };
@@ -38,17 +42,16 @@ export default function Home() {
   function toggleCompleted(id: number) {
     setTasks(tasks.map((task) => {
     if (task.id === id) {
-    return {...task, completed: !task.completed};
+      return {...task, completed: !task.completed};
     } else {
-    return task;
+      return task;
     } 
     }));
   }
 
-  function handleKeyDown(event: { key: string; }) {
-    if (event.key === "Enter") {
-      addTask(text)
-    }
+  function handleSelection(taskIDNumber: number) {
+    const selectedTask = tasks.find((task: Task) => task.id === taskIDNumber)
+    setTaskSelected(selectedTask);
   }
 
   function handleUpdate(id: number, newText: string) {
@@ -64,9 +67,9 @@ export default function Home() {
     setContextMenu({
       position: {x: event.pageX, y: event.pageY},
       items: [
-        {label: 'First One', onClick: () => alert('Yippi!!!')},
-        {label: 'Second One', onClick: () => alert('Yippi Two!!!')},
-        {label: 'Third One', onClick: () => alert('Yippi Three!!!')},
+        {label: 'Date', onClick: () => alert('Yippi!!!')},
+        {label: 'Priority', onClick: () => alert('Yippi Two!!!')},
+        {label: 'Delete', onClick: () => alert('Yippi Three!!!')},
         //{label: '', onClick: () => function()},
       ],
     });
@@ -102,7 +105,7 @@ export default function Home() {
               placeholder="Add Task..."
               value={text} 
               onChange={e => setText(e.target.value)}
-              onKeyDown={handleKeyDown}
+              onKeyDown={(event) => event.key === 'Enter' ? addTask(text) : null}
             />
             {tasks.map((task) => (
               <TodoItem
@@ -110,15 +113,22 @@ export default function Home() {
               deleteTask={deleteTask}
               toggleCompleted={toggleCompleted}
               handleUpdate={handleUpdate}
+              handleSelection={handleSelection}
               />
               ))
             }
           </div>
         </div>
         <div className="h-full w-1/2 bg-neutral-800">
-          <div className="h-full w-full px-2 py-2">
-
-          </div>
+          {taskSelected ? (
+            <ItemDesc 
+            taskSelected={taskSelected}
+            toggleCompleted={toggleCompleted}
+            handleUpdate={handleUpdate}
+            />
+          ):(
+            null
+          )}
         </div>
       </div>
     </div>

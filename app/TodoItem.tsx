@@ -1,42 +1,29 @@
 import React, { useState } from 'react'
 
-const TodoItem = ({task, deleteTask, toggleCompleted, handleUpdate}) => {
-    function handleChange() {
-        toggleCompleted(task.id);
-    } 
-
+const TodoItem = ({task, deleteTask, toggleCompleted, handleUpdate, handleSelection}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(task.text);
 
-    function handleInputChange(e: { target: { value: any; }; }) {
-        setEditText(e.target.value)
-    }
-
     function submitEdit() {
-        if (editText === '') {
-            handleUpdate(task.id, 'No Title');
-        } else {
-            handleUpdate(task.id, editText);
-        }
+        editText === '' ? handleUpdate(task.id, 'No Title') : handleUpdate(task.id, editText)
         setIsEditing(false);
     }
-
-    function handleKeyDown(event: { key: String; }) {
-        if (event.key === "Enter") {
-          submitEdit()
-        }
-      }
-  return (
-    <div className='flex flex-row justify-between bg-neutral-600 px-2 py-1 my-2 rounded-md'>
+    return (
+    <div className='flex flex-row justify-between bg-neutral-600 px-2 py-1 my-2 rounded-md' onClick={handleSelection(task.id)}>
         <div className='flex flex-row'>
             <input 
             className=''
             type="checkbox" 
             checked={task.completed} 
-            onChange={handleChange}
+            onChange={() => toggleCompleted(task.id)}
             />
             {isEditing ? (
-                <input className='ml-2 bg-transparent outline-0' value={editText} onChange={handleInputChange} onBlur={submitEdit} onKeyDown={handleKeyDown} autoFocus></input>
+                <input className='ml-2 bg-transparent outline-0'
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                onBlur={submitEdit}
+                onKeyDown={(event) => event.key === "Enter" ? submitEdit() : null}
+                autoFocus></input>
             ) : (
                 <p className='ml-2' onDoubleClick={() => setIsEditing(true)}>{task.text}</p>
             )}
@@ -45,7 +32,7 @@ const TodoItem = ({task, deleteTask, toggleCompleted, handleUpdate}) => {
             <button className='w-6 bg-black rounded-lg' onClick={() => deleteTask(task.id)}>X</button>
         </div>
     </div>
-  )
+    )
 }
 
 export default TodoItem
