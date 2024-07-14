@@ -7,10 +7,10 @@ import ItemDesc from "./ItemInfo";
 
 const TaskView = () => {
     interface Task {
-        id: Number;
+        id: number;
         name: string;
         completed: boolean;
-        taskPriority: Number;
+        taskPriority: number;
         date: Date | null;
         taskDesc: String;
         subTasks: Number[];
@@ -27,9 +27,8 @@ const TaskView = () => {
     }
 
     const [tasks, setTasks] = useState<Task[]>([])
-
-    const [text, setText] = useState('');
     const [taskSelected, setTaskSelected] = useState<Task>(dummyTask);
+    const [text, setText] = useState<string>('');
 
     function addTask(name: string) {
     const newTask = {
@@ -51,18 +50,17 @@ const TaskView = () => {
     function deleteTask(id: number) {
       setTasks(tasks.filter((task) => task.id !== id));
       if (taskSelected.id === id) {
+        alert("Before the update: " + taskSelected.id.toString());
         setTaskSelected(dummyTask);
+        alert("After the update: " + taskSelected.id.toString());
       }
     }
 
     function toggleCompleted(id: number) {
-    setTasks(tasks.map((task) => {
-      if (task.id === id) {
-          return {...task, completed: !task.completed};
-      } else {
-          return task;
-      } 
-      }));
+      const updatedTodos = tasks.map((task) => 
+        task.id === id ? { ...task, completed: !task.completed } : task
+      );
+      setTasks(updatedTodos);
     }
 
     function nameUpdate(id: number, newName: string) {
@@ -71,6 +69,13 @@ const TaskView = () => {
       );
       setTasks(updatedTodos);
     };
+
+    function dateUpdate(id: number, newDate: Date | null) {
+      const updatedTodos = tasks.map((task) => 
+        task.id === id ? { ...task, date: newDate } : task
+      );
+      setTasks(updatedTodos);
+    }
 
     function handleSelection(selectedTaskID: Number) {
       const SelectedTask = tasks.find((task: Task) => task.id === selectedTaskID)
@@ -85,7 +90,7 @@ const TaskView = () => {
     setContextMenu({
         position: {x: event.pageX, y: event.pageY},
         items: [
-        {label: 'Date', onClick: () => alert('One!!!')},
+        {label: 'Date', onClick: () => alert(taskSelected.id)},
         {label: 'Priority', onClick: () => alert('Two!!!')},
         {label: 'Delete', onClick: () => alert('Three!!!')},
         //{label: '', onClick: () => function()},
@@ -118,7 +123,8 @@ const TaskView = () => {
               {tasks.map((task) => (
                 <TodoItem
                   task={task}
-                  taskSelected={taskSelected}
+                  key={task.id}         
+                  taskSelectedID={taskSelected.id}
                   deleteTask={deleteTask}
                   toggleCompleted={toggleCompleted}
                   nameUpdate={nameUpdate}
@@ -129,15 +135,17 @@ const TaskView = () => {
             </div>
           </div>
           <div id="ItemInfo" className="h-full w-1/2 bg-neutral-800">
-            {taskSelected.id !== 0 ? (
+            { taskSelected.id !== 0 ? (
               <ItemDesc 
               taskSelected={taskSelected}
               toggleCompleted={toggleCompleted}
               nameUpdate={nameUpdate}
+              dateUpdate={dateUpdate}
               />
             ):(
               null
-            )}
+            )
+            }
           </div>
         </div>
     </div>

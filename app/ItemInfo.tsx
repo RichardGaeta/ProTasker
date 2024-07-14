@@ -1,10 +1,12 @@
 import React from 'react'
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"
 
 interface Task {
-    id: Number;
+    id: number;
     name: string;
     completed: boolean;
-    taskPriority: Number;
+    taskPriority: number;
     date: Date | null;
     taskDesc: String;
     subTasks: Number[];
@@ -14,13 +16,10 @@ interface MyComponentProps{
     taskSelected: Task;
     toggleCompleted: Function;
     nameUpdate: Function;
+    dateUpdate: Function;
 }
 
-const ItemDesc: React.FC<MyComponentProps> = ({taskSelected, toggleCompleted, nameUpdate}) => {
-
-    function selectDate() {
-
-    }
+const ItemDesc: React.FC<MyComponentProps> = ({taskSelected, toggleCompleted, nameUpdate, dateUpdate}) => {
 
     function submitEdit() {
         taskSelected.name === '' ? nameUpdate(taskSelected.id, 'No Title') : null
@@ -36,7 +35,14 @@ return (
             onChange={() => toggleCompleted(taskSelected.id)}
             />
             <p className="text-white">|</p>
-            <button className='px-2 bg-transparent rounded-lg' onClick={() => selectDate()}>Date</button>
+            <DatePicker
+            className='ml-2 bg-transparent outline-none'
+            calendarClassName='bg-black'
+            placeholderText='Date'
+            selected={taskSelected.date}
+            onChange={(date) => dateUpdate(taskSelected.id, date)}
+            isClearable
+            /> 
         </div>
         <div>
             <input className='bg-transparent outline-0'
