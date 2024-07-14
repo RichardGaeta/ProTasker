@@ -1,15 +1,33 @@
 import React, { useState } from 'react'
 
-const TodoItem = ({task, deleteTask, toggleCompleted, handleUpdate, handleSelection}) => {
+interface Task {
+    id: Number;
+    name: string;
+    completed: boolean;
+    taskPriority: Number;
+    date: Date | null;
+    taskDesc: String;
+    subTasks: Number[];
+}
+
+interface MyComponentProps {
+    task: Task;
+    taskSelected: Task | null;
+    deleteTask: Function;
+    toggleCompleted: Function;
+    nameUpdate: Function;
+    handleSelection: Function
+}
+
+const TodoItem: React.FC<MyComponentProps> = ({task, taskSelected, deleteTask, toggleCompleted, nameUpdate, handleSelection}) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [editText, setEditText] = useState(task.text);
 
     function submitEdit() {
-        editText === '' ? handleUpdate(task.id, 'No Title') : handleUpdate(task.id, editText)
         setIsEditing(false);
     }
+
     return (
-    <div className='flex flex-row justify-between bg-neutral-600 px-2 py-1 my-2 rounded-md' onClick={handleSelection(task.id)}>
+    <div className='flex flex-row justify-between ${task.id === taskSelected.id ? bg-neutral-700 : bg-neutral-500} px-2 py-1 my-2 rounded-md' onClick={handleSelection(task.id)}>
         <div className='flex flex-row'>
             <input 
             className=''
@@ -19,13 +37,13 @@ const TodoItem = ({task, deleteTask, toggleCompleted, handleUpdate, handleSelect
             />
             {isEditing ? (
                 <input className='ml-2 bg-transparent outline-0'
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
+                value={task.name}
+                onChange={(e) => nameUpdate(task.id, e.target.value)}
                 onBlur={submitEdit}
                 onKeyDown={(event) => event.key === "Enter" ? submitEdit() : null}
                 autoFocus></input>
             ) : (
-                <p className='ml-2' onDoubleClick={() => setIsEditing(true)}>{task.text}</p>
+                <p className='ml-2' onDoubleClick={() => setIsEditing(true)}>{task.name}</p>
             )}
         </div>
         <div>

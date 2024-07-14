@@ -1,15 +1,31 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-const ItemDesc = ({taskSelected, toggleCompleted, handleUpdate}) => {
-    const [editText, setEditText] = useState(taskSelected.text);
+interface Task {
+    id: Number;
+    name: string;
+    completed: boolean;
+    taskPriority: Number;
+    date: Date | null;
+    taskDesc: String;
+    subTasks: Number[];
+}
+
+interface MyComponentProps{
+    taskSelected: Task;
+    toggleCompleted: Function;
+    nameUpdate: Function;
+}
+
+const ItemDesc: React.FC<MyComponentProps> = ({taskSelected, toggleCompleted, nameUpdate}) => {
 
     function selectDate() {
 
     }
 
     function submitEdit() {
-        editText === '' ? handleUpdate(taskSelected.id, 'No Title') : handleUpdate(taskSelected.id, editText)
+        taskSelected.name === '' ? nameUpdate(taskSelected.id, 'No Title') : null
     }
+
 return (
     <div className="h-full w-full px-3 py-3 flex flex-col">
         <div className="h-fit w-full flex flex-row border-d-2 border-black">
@@ -25,10 +41,9 @@ return (
         <div>
             <input className='bg-transparent outline-0'
             placeholder='Name'
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
+            value={taskSelected.name}
+            onChange={(e) => nameUpdate(taskSelected.id, e.target.value)}
             onBlur={submitEdit}
-            onKeyDown={(event) => event.key === "Enter" ? submitEdit() : null}
             autoFocus></input>
         </div>
         <div className="h-full w-full">
