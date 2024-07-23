@@ -1,6 +1,12 @@
 import React from 'react'
 
-const ContextMenu = ({position, items, onClose}) => {
+interface componentProps {
+  position: any;
+  items: any;
+  onClose: any;
+}
+
+const ContextMenu: React.FC<componentProps> = ({position, items, onClose}) => {
   return (
     <div className='absolute bg-neutral-700 border-black shadow-md z-50 py-2 rounded-md' style={{top: position.y, left: position.x}} onClick={onClose}>
         {items.map((item: {label: String, onClick: React.MouseEventHandler<HTMLDivElement> | undefined}, index: React.Key | null | undefined) => (
