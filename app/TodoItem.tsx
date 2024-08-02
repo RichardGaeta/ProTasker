@@ -42,13 +42,13 @@ const TodoItem: React.FC<componentProps> = ({task, taskSelectedID, deleteTask, f
 
     return (
     <div className={`px-2 py-1 my-2 rounded-md ${task.id === taskSelectedID ? 'bg-neutral-700' : 'bg-neutral-500'}`} onClick={() => {handleSelection(task.id); handleOutsideClick();}} onContextMenu={handleRightClick}>
-        {contextMenu && (
+        {contextMenu &&
             <ContextMenu
               position={contextMenu.position}
               items={contextMenu.items}
               onClose={handleOutsideClick}
             />
-        )}
+        }
         <div className='flex flex-row'>
             <label>
                 <input 

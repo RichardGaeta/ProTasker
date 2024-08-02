@@ -65,6 +65,9 @@ return (
                 <Dropdown
                     name={"Priority"}
                     items={priorityMenuItems}
+                    divAdjust={''}
+                    btnAdjust={''}
+                    nameChange={false}
                 />
             </div>
         </div>
