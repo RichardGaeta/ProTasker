@@ -1,17 +1,8 @@
 import React from 'react'
+import { Task } from './Task';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
 import Dropdown from './Dropdown';
-
-interface Task {
-    id: number;
-    name: string;
-    completed: boolean;
-    taskPriority: number;
-    date: Date | null;
-    desc: string;
-    subTasks: Number[];
-}
 
 interface componentProps {
     taskSelected: Task;
@@ -26,13 +17,6 @@ const priorityMenuItems = [
     {label: 'Low', onClick: () => fieldUpdate(taskSelected.id, 3, "priority")},
     {label: 'None', onClick: () => fieldUpdate(taskSelected.id, 4, "priority")},
 ]
-
-let checkboxColor = () => {
-    if (taskSelected.taskPriority === 1) return 'border-neutral-500';
-    if (taskSelected.taskPriority === 2) return 'border-yellow-500';
-    if (taskSelected.taskPriority === 3) return 'border-blue-500';
-    if (taskSelected.taskPriority === 4) return 'border-red-500';
-}
 
 return (
     <div className="h-full w-full px-3 py-3 flex flex-col">

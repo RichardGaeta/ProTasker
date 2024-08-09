@@ -1,15 +1,6 @@
 import React, { useState } from 'react'
 import ContextMenu from './ContextMenu';
-
-interface Task {
-    id: number;
-    name: string;
-    completed: boolean;
-    taskPriority: number;
-    date: Date | null;
-    desc: string;
-    subTasks: Number[];
-}
+import { Task } from './Task';
 
 interface componentProps {
     task: Task;

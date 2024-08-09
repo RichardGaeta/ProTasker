@@ -1,21 +1,15 @@
 import React from 'react'
 import HabitItem from './HabitItem';
-
-interface Habit {
-  id: number;
-  name: string;
-  category: string;
-  completed: boolean[]
-  streak: number;
-  // frequency: TBD;
-}
+import { Habit } from './Habit';
 
 interface componentProps {
   sectionName: string;
   habitSection: Habit[];
+  editHabit: Function;
+  deleteHabit: Function;
 }
 
-const HabitSection: React.FC<componentProps> = ({sectionName, habitSection}) => {
+const HabitSection: React.FC<componentProps> = ({sectionName, habitSection, editHabit, deleteHabit}) => {
   return (
     <div>
       {habitSection.length !== 0 &&
@@ -25,6 +19,8 @@ const HabitSection: React.FC<componentProps> = ({sectionName, habitSection}) => 
           habitSection.map((Habit: any) => (
             <HabitItem
               habit={Habit}
+              editHabit={editHabit}
+              deleteHabit={deleteHabit}
             />
           ))
         }

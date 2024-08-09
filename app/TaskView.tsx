@@ -1,20 +1,12 @@
 'use client'
 import { useState } from "react";
+import { Task } from './Task';
 import TodoItem from "./TodoItem";
 import ItemDesc from "./ItemInfo";
 import Dropdown from './Dropdown';
 import dayjs from "dayjs";
 
 const TaskView = () => {
-  interface Task {
-      id: number;
-      name: string;
-      completed: boolean;
-      taskPriority: number;
-      date: Date | null;
-      desc: string;
-      subTasks: Number[];
-  }
     
   const dummyTask: Task = {
     id: 0,
