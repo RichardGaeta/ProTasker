@@ -1,8 +1,9 @@
 'use client'
 import React, { useState } from 'react'
-import HabitMenu from './HabitMenu';
+import CreateHabitMenu from './CreateHabitMenu';
 import HabitSection from './HabitSection';
 import { Habit } from './Habit';
+import EditHabitMenu from './EditHabitMenu';
 
 const HabitList = () => {
   const dummyHabit = {
@@ -16,7 +17,7 @@ const HabitList = () => {
 
   const [Habits, setHabits] = useState<Habit[]>([]);
   const [showCreateMenu, setShowCreateMenu] = useState<boolean>(false);
-  const [editMode, setEditMode] = useState<boolean>(false);
+  const [showEditMenu, setShowEditMenu] = useState<boolean>(false);
   const [habitSelected, setHabitSelected] = useState<Habit>(dummyHabit);
 
   const NoneHabits = Habits.filter((Habit) => Habit.category === "None")
@@ -38,8 +39,7 @@ const HabitList = () => {
 
   const editHabit = (id: number) => {
     setHabitSelected(Habits.find((habit) => habit.id === id)!);
-    setEditMode(true);
-    setShowCreateMenu(true)
+    setShowEditMenu(true);
   }
 
   const deleteHabit = (id: number) => {
@@ -47,12 +47,8 @@ const HabitList = () => {
     setHabits(Habits.filter((habit) => habit.id !== id));
   }
 
-  const fieldUpdate = (id: number, newName: string, newCategory: string, newFrequency: string) => {
-    setHabits(prevHabits => prevHabits.map(habit => habit.id === id ? { ...habit, name: newName, category: newCategory, frequency: newFrequency } : habit));
-  }
-
-  const habitIntervalCheck = () => {
-
+  const fieldUpdate = (id: number, newName: string, newCategory: string, newInterval: boolean[]) => {
+    setHabits(prevHabits => prevHabits.map(habit => habit.id === id ? { ...habit, name: newName, category: newCategory, interval: newInterval } : habit));
   }
 
   const streakCalc = (id: number) => {
@@ -63,6 +59,12 @@ const HabitList = () => {
         boolArray.completed[i] ? currentStreak++ : currentStreak = 0
       }
     }
+    setHabits(prevHabits => prevHabits.map(habit => habit.id === id ? { ...habit, streak: currentStreak } : habit));
+  }
+
+  const checkHabit = (id: number) => {
+    setHabits(prevHabits => prevHabits.map(habit => habit.id === id ? { ...habit, completed: [...habit.completed, true] } : habit));
+    streakCalc(id);
   }
 
   return (
@@ -76,21 +78,26 @@ const HabitList = () => {
           >Add Habit</button>
         </div>
         {showCreateMenu === true &&
-          <HabitMenu
+          <CreateHabitMenu
             createHabit={createHabit}
             showCreateMenu={(input: boolean) => setShowCreateMenu(input)}
             habit={habitSelected}
-            editMode={editMode}
-            editHabit={fieldUpdate}
+          />
+        }
+        {showEditMenu === true &&
+          <EditHabitMenu
+            habit={habitSelected}
+            fieldUpdate={fieldUpdate}
+            showEditMenu={(input: boolean) => setShowEditMenu(input)}
           />
         }
         <div id='DaysOfWeekContainer' className='flex flex-row'>
           
         </div>
-        <HabitSection sectionName={'None'} habitSection={NoneHabits} editHabit={editHabit} deleteHabit={deleteHabit} />
-        <HabitSection sectionName={'Morning'} habitSection={MorningHabits} editHabit={editHabit} deleteHabit={deleteHabit} />
-        <HabitSection sectionName={'Afternoon'} habitSection={AfternoonHabits} editHabit={editHabit} deleteHabit={deleteHabit} />
-        <HabitSection sectionName={'Night'} habitSection={NightHabits} editHabit={editHabit} deleteHabit={deleteHabit} />
+        <HabitSection sectionName={'None'} habitSection={NoneHabits} checkHabit={checkHabit} editHabit={editHabit} deleteHabit={deleteHabit} />
+        <HabitSection sectionName={'Morning'} habitSection={MorningHabits} checkHabit={checkHabit} editHabit={editHabit} deleteHabit={deleteHabit} />
+        <HabitSection sectionName={'Afternoon'} habitSection={AfternoonHabits} checkHabit={checkHabit} editHabit={editHabit} deleteHabit={deleteHabit} />
+        <HabitSection sectionName={'Night'} habitSection={NightHabits} checkHabit={checkHabit} editHabit={editHabit} deleteHabit={deleteHabit} />
       </div>
     </div>
   )
